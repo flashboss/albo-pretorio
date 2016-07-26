@@ -18,7 +18,7 @@ public class Estrattore extends ActionExecuterAbstractBase {
 
 	private ContentService contentService;
 
-	public final static String NAME = "estrattore-txt";
+	public final static String NAME = "estrattore";
 
 	@Override
 	protected void addParameterDefinitions(List<ParameterDefinition> paramList) {

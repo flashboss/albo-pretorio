@@ -69,7 +69,7 @@ public class DemoComponentTest {
 		assertNotNull(companyHome);
 		String companyHomeName = (String) nodeService.getProperty(companyHome, PROP_NAME);
 		assertNotNull(companyHomeName);
-		assertEquals("Company Home", companyHomeName);
+		assertEquals("Home page dell'azienda", companyHomeName);
 	}
 
 	@Test
