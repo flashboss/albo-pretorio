@@ -36,6 +36,15 @@
 			</list>
 		</property>
 	</bean>
+
+	<!-- Messages for ocr-extract action literals -->
+	<bean id="alfresco-ocr-indexer_actionResourceBundles" parent="actionResourceBundles">
+        <property name="resourceBundles">
+            <list>
+                <value>alfresco.module.${project.artifactId}.messages.alfresco-ocr-indexer</value>
+            </list>
+        </property>
+    </bean>
 	
 
 
