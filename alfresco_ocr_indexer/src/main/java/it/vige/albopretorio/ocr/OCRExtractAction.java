@@ -35,8 +35,6 @@ import java.util.Map;
 
 import org.alfresco.repo.action.ParameterDefinitionImpl;
 import org.alfresco.repo.action.executer.ActionExecuterAbstractBase;
-import org.alfresco.repo.transaction.RetryingTransactionHelper;
-import org.alfresco.repo.transaction.RetryingTransactionHelper.RetryingTransactionCallback;
 import org.alfresco.service.cmr.action.Action;
 import org.alfresco.service.cmr.action.ParameterDefinition;
 import org.alfresco.service.cmr.repository.ContentData;
@@ -47,7 +45,6 @@ import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.version.VersionService;
 import org.alfresco.service.namespace.QName;
-import org.alfresco.service.transaction.TransactionService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -58,7 +55,6 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 	private NodeService nodeService;
 	private ContentService contentService;
 	private VersionService versionService;
-	private TransactionService transactionService;
 
 	private OCRTransformWorker ocrTransformWorker;
 
@@ -90,24 +86,14 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 				if (continueOnError == null)
 					continueOnError = true;
 
-				// # 5 Problem writing OCRed file
-				// As action.getExecuteAsychronously() returns always FALSE
-				// (it's an Alfresco issue):
-				// 1 - Try first with new Transaction
-				// 2 - In case of error, try then with the current Transaction
 				try {
-					executeInNewTransaction(actionedUponNodeRef, contentData);
-				} catch (Throwable throwableNewTransaction) {
-					logger.warn(actionedUponNodeRef + ": " + throwableNewTransaction.getMessage());
-					try {
-						// Current transaction
-						executeImplInternal(actionedUponNodeRef, contentData);
-					} catch (Throwable throwableCurrentTransaction) {
-						if (continueOnError) {
-							logger.warn(actionedUponNodeRef + ": " + throwableNewTransaction.getMessage());
-						} else {
-							throw throwableCurrentTransaction;
-						}
+					// Current transaction
+					executeImplInternal(actionedUponNodeRef, contentData);
+				} catch (Throwable throwableCurrentTransaction) {
+					if (continueOnError) {
+						logger.warn(actionedUponNodeRef + ": " + throwableCurrentTransaction.getMessage());
+					} else {
+						throw throwableCurrentTransaction;
 					}
 				}
 
@@ -117,38 +103,11 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 
 	}
 
-	// Avoid ConcurrencyFailureException by using RetryingTransactionHelper
-	private void executeInNewTransaction(final NodeRef nodeRef, final ContentData contentData) {
-
-		RetryingTransactionCallback<Void> callback = new RetryingTransactionCallback<Void>() {
-			@Override
-			public Void execute() throws Throwable {
-				executeImplInternal(nodeRef, contentData);
-				return null;
-			}
-		};
-		RetryingTransactionHelper txnHelper = transactionService.getRetryingTransactionHelper();
-		txnHelper.doInTransaction(callback, false, true);
-	}
-
 	private void executeImplInternal(NodeRef actionedUponNodeRef, ContentData contentData) {
 
 		String originalMimeType = contentData.getMimetype();
 
 		ContentReader reader = contentService.getReader(actionedUponNodeRef, PROP_CONTENT);
-
-		// Non PDF files (such as images)
-		if (!originalMimeType.equals(MIMETYPE_PDF)) {
-
-			// Try to transform any format to PDF
-			ContentWriter writer = contentService.getTempWriter();
-			writer.setMimetype(MIMETYPE_PDF);
-			contentService.transform(reader, writer);
-
-			// Set PDF as content reader
-			reader = writer.getReader();
-
-		}
 
 		ContentWriter writer = contentService.getTempWriter();
 		writer.setMimetype(MIMETYPE_PDF);
@@ -185,6 +144,7 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 		writeOriginalContent.putContent(writer.getReader());
 
 		// Set OCRd aspect to avoid future re-OCR process
+
 		Map<QName, Serializable> aspectProperties = new HashMap<QName, Serializable>();
 		aspectProperties.put(PROP_PROCESSED_DATE, new Date());
 		nodeService.addAspect(actionedUponNodeRef, ASPECT_OCRD, aspectProperties);
@@ -218,10 +178,6 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 
 	public void setVersionService(VersionService versionService) {
 		this.versionService = versionService;
-	}
-
-	public void setTransactionService(TransactionService transactionService) {
-		this.transactionService = transactionService;
 	}
 
 }

@@ -13,11 +13,12 @@
  ******************************************************************************/
 package it.vige.albopretorio.ocr.model;
 
-import org.alfresco.service.namespace.QName;
-	 
-public interface OCRdModel {
-    static final String URI = "http://www.keensoft.es/model/content/ocr/1.0";
-    static final QName ASPECT_OCRD = QName.createQName(URI, "ocrd");
-    static final QName PROP_PROCESSED_DATE = QName.createQName(URI, "processedDate");
-}
+import static org.alfresco.service.namespace.QName.createQName;
 
+import org.alfresco.service.namespace.QName;
+
+public interface OCRdModel {
+	static final String URI = "http://vige.it/model/content/1.0";
+	static final QName ASPECT_OCRD = createQName(URI, "ocrd");
+	static final QName PROP_PROCESSED_DATE = createQName(URI, "processedDate");
+}

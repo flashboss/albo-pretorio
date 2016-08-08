@@ -149,4 +149,16 @@
 			</properties>
 		</type>
 	</types>
+	
+    <aspects>
+        <aspect name="albopretorio:ocrd">
+            <title>OCRd</title>
+            <properties>
+                <property name="albopretorio:processedDate">
+                    <title>OCR process date</title>
+                    <type>d:datetime</type>
+                </property>
+            </properties>
+        </aspect>
+    </aspects>
 </model>

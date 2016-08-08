@@ -42,16 +42,12 @@
         <property name="nodeService" ref="NodeService"/>
         <property name="contentService" ref="ContentService" />
         <property name="versionService" ref="VersionService" />
-        <property name="transactionService" ref="TransactionService" />
         <property name="ocrTransformWorker" ref="transformer.worker.OCR" />
     </bean>
     
 	<bean id="transformer.worker.OCR" class="it.vige.albopretorio.ocr.OCRTransformWorker">
         <property name="verbose" value="${ocr.output.verbose}" />
 	    <property name="serverOS" value="${ocr.server.os}" />
-		<property name="mimetypeService">
-			<ref bean="mimetypeService" />
-		</property>
 		<!-- Windows: service by URL (non authenticated) -->
 		<property name="executerWindows">
 		    <bean name="transformer.OCR.service" class="it.vige.albopretorio.ocr.RestClient">
