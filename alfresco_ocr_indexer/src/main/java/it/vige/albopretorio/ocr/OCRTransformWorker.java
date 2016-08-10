@@ -13,151 +13,59 @@
  ******************************************************************************/
 package it.vige.albopretorio.ocr;
 
-import static org.alfresco.util.TempFileProvider.createTempFile;
+import static com.asprise.ocr.Ocr.OUTPUT_FORMAT_PLAINTEXT;
+import static com.asprise.ocr.Ocr.RECOGNIZE_TYPE_ALL;
+import static com.asprise.ocr.Ocr.SPEED_SLOW;
+import static com.asprise.ocr.Ocr.setUp;
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
+import static org.apache.pdfbox.pdmodel.PDDocument.loadNonSeq;
 
-import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.List;
 
 import org.alfresco.repo.content.transform.ContentTransformerHelper;
-import org.alfresco.repo.content.transform.ContentTransformerWorker;
-import org.alfresco.service.cmr.repository.ContentIOException;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.TransformationOptions;
-import org.alfresco.util.exec.RuntimeExec;
-import org.alfresco.util.exec.RuntimeExec.ExecutionResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+
+import com.asprise.ocr.Ocr;
 
 // Transformer from plain PDF (images attached) to Searchable PDF by using OCR
-public class OCRTransformWorker extends ContentTransformerHelper implements ContentTransformerWorker {
+public class OCRTransformWorker extends ContentTransformerHelper {
 
 	private static final Log logger = LogFactory.getLog(OCRTransformWorker.class);
-
-	private boolean verbose = false;
-
-	private static final String VAR_SOURCE = "source";
-	private static final String VAR_TARGET = "target";
-	public final static String SERVER_OS_LINUX = "linux";
-	public final static String SERVER_OS_WINDOWS = "windows";
-
-	private RuntimeExec executerLinux;
-	private RuntimeExec executerWindows;
-	private String serverOS;
-	private RuntimeExec checkCommand;
-
-	private boolean available = true;
-	private Date lastChecked = new Date(0l);
-	private int checkFrequencyInSeconds = 120;
 
 	public final void transform(ContentReader reader, ContentWriter writer, TransformationOptions options)
 			throws Exception {
 
 		try {
 
-			File sourceFile = createTempFile(getClass().getSimpleName() + "_source_", ".pdf");
-			reader.getContent(sourceFile);
-
-			String path = sourceFile.getAbsolutePath();
-			String targetPath = path.substring(0, path.toLowerCase().indexOf(".pdf")) + "_ocr.pdf";
-
-			Map<String, String> properties = new HashMap<String, String>(1);
-
-			properties.put(VAR_SOURCE, sourceFile.getAbsolutePath());
-			properties.put(VAR_TARGET, targetPath);
-
-			ExecutionResult result = obtainExecuter(properties);
-
-			if (verbose) {
-				logger.info("EXIT VALUE: " + result.getExitValue());
-				logger.info("STDOUT: " + result.getStdOut());
-				logger.info("STDERR: " + result.getStdErr());
+			setUp(); // one time setup
+			Ocr ocr = new Ocr(); // create a new OCR engine
+			ocr.startEngine("por", SPEED_SLOW); // Portoguese
+			String result = "";
+			try {
+				PDDocument document = loadNonSeq(reader.getContentInputStream(), null);
+				@SuppressWarnings("unchecked")
+				List<PDPage> pdPages = (List<PDPage>) document.getDocumentCatalog().getAllPages();
+				for (PDPage pdPage : pdPages) {
+					BufferedImage bim = pdPage.convertToImage(TYPE_INT_RGB, 300);
+					result += ocr.recognize(bim, RECOGNIZE_TYPE_ALL, OUTPUT_FORMAT_PLAINTEXT);
+				}
+				document.close();
+			} catch (IOException e) {
+				logger.error(e);
 			}
-
-			if (result.getExitValue() == 143) {
-				logger.warn(result.getStdErr());
-			} else if (result.getExitValue() != 0 && result.getStdErr() != null && result.getStdErr().length() > 0) {
-				throw new ContentIOException("Failed to perform OCR transformation: \n" + result);
-			}
-
-			File targetFile = new File(targetPath);
-			writer.putContent(targetFile);
+			ocr.stopEngine();
+			writer.putContent(result);
 
 		} catch (Throwable t) {
 			throw new RuntimeException(t);
 		}
-	}
-
-	private ExecutionResult obtainExecuter(Map<String, String> properties) {
-		if (serverOS.equals(SERVER_OS_LINUX)) {
-			return executerLinux.execute(properties);
-		} else if (serverOS.equals(SERVER_OS_WINDOWS)) {
-			return executerWindows.execute(properties);
-		} else {
-			throw new ContentIOException("Failed to recognize the operative system: \n" + serverOS);
-		}
-	}
-
-	@Override
-	public boolean isTransformable(String sourceMimetype, String targetMimetype, TransformationOptions options) {
-		if (targetMimetype.equals("application/pdf")) {
-			if (sourceMimetype.equals("application/pdf")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public String getVersionString() {
-		return "OCR Transformer V1.0";
-	}
-
-	public void setCheckFrequencyInSeconds(int frequency) {
-		checkFrequencyInSeconds = frequency;
-	}
-
-	public boolean isAvailable() {
-		Date refreshAvailabilityDate = new Date(lastChecked.getTime() + 1000l * checkFrequencyInSeconds);
-		if (new Date().after(refreshAvailabilityDate)) {
-			test();
-		}
-		return available;
-	}
-
-	public void setCheckCommand(RuntimeExec checkCommand) {
-		this.checkCommand = checkCommand;
-	}
-
-	protected void test() {
-		try {
-			logger.debug("Testing availability");
-			ExecutionResult result = checkCommand.execute();
-			available = result.getSuccess();
-			logger.info("Is OCR available? " + available);
-		} catch (Exception e) {
-			available = false;
-			logger.warn("Check command [" + checkCommand.getCommand()
-					+ "] failed.  Registering transform as unavailable for the next " + checkFrequencyInSeconds
-					+ " seconds");
-		}
-	}
-
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
-	}
-
-	public void setExecuterLinux(RuntimeExec executerLinux) {
-		this.executerLinux = executerLinux;
-	}
-
-	public void setExecuterWindows(RuntimeExec executerWindows) {
-		this.executerWindows = executerWindows;
-	}
-
-	public void setServerOS(String serverOS) {
-		this.serverOS = serverOS;
 	}
 }

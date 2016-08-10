@@ -15,12 +15,19 @@ package it.vige.albopretorio.demoamp.test;
 
 import static it.vige.albopretorio.demoamp.DemoComponent.albo_name;
 import static org.alfresco.model.ContentModel.ASSOC_CONTAINS;
+import static org.alfresco.model.ContentModel.PROP_CONTENT;
 import static org.alfresco.model.ContentModel.PROP_NAME;
+import static org.alfresco.repo.content.MimetypeMap.MIMETYPE_PDF;
 import static org.alfresco.repo.security.authentication.AuthenticationUtil.setFullyAuthenticatedUser;
+import static org.apache.log4j.Logger.getLogger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import org.alfresco.service.cmr.repository.ContentReader;
+import org.alfresco.service.cmr.repository.ContentService;
+import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.apache.log4j.Logger;
@@ -35,6 +42,7 @@ import com.tradeshift.test.remote.Remote;
 import com.tradeshift.test.remote.RemoteTestRunner;
 
 import it.vige.albopretorio.demoamp.DemoComponent;
+import it.vige.albopretorio.ocr.OCRTransformWorker;
 
 /**
  * A simple class demonstrating how to run out-of-container tests loading
@@ -62,14 +70,21 @@ public class DemoComponentTest {
 
 	private static final String ADMIN_USER_NAME = "admin";
 
-	static Logger log = Logger.getLogger(DemoComponentTest.class);
+	static Logger log = getLogger(DemoComponentTest.class);
 
 	@Autowired
 	protected DemoComponent demoComponent;
 
 	@Autowired
+	protected OCRTransformWorker ocrTransformWorker;
+
+	@Autowired
 	@Qualifier("NodeService")
 	protected NodeService nodeService;
+
+	@Autowired
+	@Qualifier("ContentService")
+	protected ContentService contentService;
 
 	@Test
 	public void testWiring() {
@@ -105,6 +120,25 @@ public class DemoComponentTest {
 		assertNotNull(childNodeCount);
 		// There are 27 documents by default under the albo_pretorio folder
 		assertEquals(27, childNodeCount);
+	}
+
+	@Test
+	public void testOCRConversion() {
+		setFullyAuthenticatedUser(ADMIN_USER_NAME);
+		NodeRef companyHome = demoComponent.getCompanyHome();
+		NodeRef albo = nodeService.getChildByName(companyHome, ASSOC_CONTAINS, albo_name);
+
+		ContentReader reader = contentService.getReader(
+				nodeService.getChildByName(albo, ASSOC_CONTAINS, "InterrogazioneCavaColleLargo.pdf"), PROP_CONTENT);
+
+		ContentWriter writer = contentService.getTempWriter();
+		writer.setMimetype(MIMETYPE_PDF);
+		try {
+			ocrTransformWorker.transform(reader, writer, null);
+			assertTrue(writer.getReader().getContentString().contains("Sebastiano"));
+		} catch (Exception e) {
+			fail();
+		}
 	}
 
 }

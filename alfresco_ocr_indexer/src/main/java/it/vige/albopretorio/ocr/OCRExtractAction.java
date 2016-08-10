@@ -15,17 +15,12 @@ package it.vige.albopretorio.ocr;
 
 import static it.vige.albopretorio.ocr.model.OCRdModel.ASPECT_OCRD;
 import static it.vige.albopretorio.ocr.model.OCRdModel.PROP_PROCESSED_DATE;
-import static org.alfresco.model.ContentModel.ASSOC_CONTAINS;
 import static org.alfresco.model.ContentModel.PROP_CONTENT;
-import static org.alfresco.model.ContentModel.PROP_NAME;
-import static org.alfresco.model.ContentModel.TYPE_CONTENT;
 import static org.alfresco.repo.content.MimetypeMap.MIMETYPE_PDF;
 import static org.alfresco.repo.version.VersionBaseModel.PROP_VERSION_TYPE;
 import static org.alfresco.service.cmr.dictionary.DataTypeDefinition.BOOLEAN;
 import static org.alfresco.service.cmr.version.Version.PROP_DESCRIPTION;
 import static org.alfresco.service.cmr.version.VersionType.MINOR;
-import static org.alfresco.service.namespace.NamespaceService.CONTENT_MODEL_1_0_URI;
-import static org.alfresco.service.namespace.QName.createQName;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -106,62 +101,49 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 	private void executeImplInternal(NodeRef actionedUponNodeRef, ContentData contentData) {
 
 		String originalMimeType = contentData.getMimetype();
+		if (originalMimeType.equals(MIMETYPE_PDF)) {
 
-		ContentReader reader = contentService.getReader(actionedUponNodeRef, PROP_CONTENT);
+			ContentReader reader = contentService.getReader(actionedUponNodeRef, PROP_CONTENT);
 
-		ContentWriter writer = contentService.getTempWriter();
-		writer.setMimetype(MIMETYPE_PDF);
+			ContentWriter writer = contentService.getTempWriter();
+			writer.setMimetype(MIMETYPE_PDF);
 
-		try {
-			ocrTransformWorker.transform(reader, writer, null);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+			try {
+				ocrTransformWorker.transform(reader, writer, null);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 
-		// Set initial version if it's a new one
-		versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
-		if (!versionService.isVersioned(actionedUponNodeRef)) {
+			// Set initial version if it's a new one
+			versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
+			if (!versionService.isVersioned(actionedUponNodeRef)) {
+				Map<String, Serializable> versionProperties = new HashMap<String, Serializable>();
+				versionProperties.put(PROP_DESCRIPTION, "OCRd");
+				versionProperties.put(PROP_VERSION_TYPE, MINOR);
+				versionService.createVersion(actionedUponNodeRef, versionProperties);
+			}
+
+			ContentWriter writeOriginalContent = null;
+			// Update original PDF file
+			writeOriginalContent = contentService.getWriter(actionedUponNodeRef, PROP_CONTENT, true);
+			writeOriginalContent.putContent(writer.getReader());
+
+			// Set OCRd aspect to avoid future re-OCR process
+
+			Map<QName, Serializable> aspectProperties = new HashMap<QName, Serializable>();
+			aspectProperties.put(PROP_PROCESSED_DATE, new Date());
+			nodeService.addAspect(actionedUponNodeRef, ASPECT_OCRD, aspectProperties);
+
+			// Manual versioning because of Alfresco insane rules for first
+			// version
+			// content nodes
+			versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
 			Map<String, Serializable> versionProperties = new HashMap<String, Serializable>();
 			versionProperties.put(PROP_DESCRIPTION, "OCRd");
 			versionProperties.put(PROP_VERSION_TYPE, MINOR);
 			versionService.createVersion(actionedUponNodeRef, versionProperties);
+
 		}
-
-		ContentWriter writeOriginalContent = null;
-		// Update original PDF file
-		if (originalMimeType.equals(MIMETYPE_PDF)) {
-			writeOriginalContent = contentService.getWriter(actionedUponNodeRef, PROP_CONTENT, true);
-		} else {
-			// Create new PDF file
-			String fileName = nodeService.getProperty(actionedUponNodeRef, PROP_NAME) + ".pdf";
-			Map<QName, Serializable> props = new HashMap<QName, Serializable>(1);
-			props.put(PROP_NAME, fileName);
-			NodeRef pdfNodeRef = createNode(nodeService.getPrimaryParent(actionedUponNodeRef).getParentRef(), fileName,
-					props);
-			writeOriginalContent = contentService.getWriter(pdfNodeRef, PROP_CONTENT, true);
-			writeOriginalContent.setMimetype(MIMETYPE_PDF);
-		}
-		writeOriginalContent.putContent(writer.getReader());
-
-		// Set OCRd aspect to avoid future re-OCR process
-
-		Map<QName, Serializable> aspectProperties = new HashMap<QName, Serializable>();
-		aspectProperties.put(PROP_PROCESSED_DATE, new Date());
-		nodeService.addAspect(actionedUponNodeRef, ASPECT_OCRD, aspectProperties);
-
-		// Manual versioning because of Alfresco insane rules for first version
-		// content nodes
-		versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
-		Map<String, Serializable> versionProperties = new HashMap<String, Serializable>();
-		versionProperties.put(PROP_DESCRIPTION, "OCRd");
-		versionProperties.put(PROP_VERSION_TYPE, MINOR);
-		versionService.createVersion(actionedUponNodeRef, versionProperties);
-
-	}
-
-	private NodeRef createNode(NodeRef parentNodeRef, String name, Map<QName, Serializable> props) {
-		return nodeService.createNode(parentNodeRef, ASSOC_CONTAINS, createQName(CONTENT_MODEL_1_0_URI, name),
-				TYPE_CONTENT, props).getChildRef();
 	}
 
 	public void setNodeService(NodeService nodeService) {
