@@ -118,8 +118,8 @@ public class DemoComponentTest {
 		NodeRef albo = nodeService.getChildByName(companyHome, ASSOC_CONTAINS, albo_name);
 		int childNodeCount = demoComponent.childNodesCount(albo);
 		assertNotNull(childNodeCount);
-		// There are 27 documents by default under the albo_pretorio folder
-		assertEquals(27, childNodeCount);
+		// There are 6 documents by default under the albo_pretorio folder
+		assertEquals(6, childNodeCount);
 	}
 
 	@Test
