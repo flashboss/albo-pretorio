@@ -1,3 +1,5 @@
+A set of utilities to use an albo pretorio online
+
 Albo imported through the command:
 
 ./export.sh -user admin -pwd admin -s workspace://SpacesStore -p /app:company_home/cm:Albo -verbose -root -zip Albo
