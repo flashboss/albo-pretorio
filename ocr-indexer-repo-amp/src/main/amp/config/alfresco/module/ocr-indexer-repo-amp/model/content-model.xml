@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/******************************************************************************
+ * Vige, Home of Professional Open Source Copyright 2010, Vige, and           *
+ * individual contributors by the @authors tag. See the copyright.txt in the  *
+ * distribution for a full listing of individual contributors.                *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may    *
+ * not use this file except in compliance with the License. You may obtain    *
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0        *
+ * Unless required by applicable law or agreed to in writing, software        *
+ * distributed under the License is distributed on an "AS IS" BASIS,          *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ * See the License for the specific language governing permissions and        *
+ * limitations under the License.                                             *
+ ******************************************************************************/
+-->
+<model name="albopretorio:contentModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+    <!-- Optional meta-data about the model -->
+    <description>Document Model for Repo Extension X</description>
+    <author>My Name</author>
+    <version>1.0</version>
+
+    <imports>
+        <!-- Import Alfresco Dictionary Definitions -->
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d"/>
+        <!-- Import Alfresco Content Domain Model Definitions -->
+        <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm"/>
+        <!-- Import Alfresco System Model Definitions -->
+        <import uri="http://www.alfresco.org/model/system/1.0" prefix="sys"/>
+    </imports>
+
+    <!-- Custom namespace for your domain -->
+	<namespaces>
+		<namespace uri="http://vige.it/model/content/1.0"
+			prefix="albopretorio" />
+	</namespaces>
+
+	<constraints>
+		<constraint name="albopretorio:tipi" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>Tutto il Registro</value>
+					<value>Atti del Commissario Prefettizio</value>
+					<value>Atti Vari</value>
+					<value>Avvisi Pubblici</value>
+					<value>Concorsi</value>
+					<value>Decreti del Sindaco</value>
+					<value>Decreti Dirigenziali</value>
+					<value>Deliberazioni del Commissario ad Acta</value>
+					<value>Deliberazioni di Consiglio</value>
+					<value>Deliberazioni di Giunta</value>
+					<value>Determinazioni Dirigenziali</value>
+					<value>Elettorale</value>
+					<value>Gare</value>
+					<value>Irreperibilità</value>
+					<value>Ordinanze</value>
+					<value>Provvedimenti Determinativi</value>
+					<value>Determinazioni Dirigenziali / Area 10: Acquisti e Arredo Urbano</value>
+					<value>Determinazioni Dirigenziali / Area 1: Risorse Finanziare</value>
+					<value>Determinazioni Dirigenziali / Area 2: Centrale Acquisti e Grandi Concessioni</value>
+					<value>Determinazioni Dirigenziali / Area 3: Attività Demanio e Patrimonio</value>
+					<value>Determinazioni Dirigenziali / Area 4: Urbanistica e Pianificazione Territorio</value>
+					<value>Determinazioni Dirigenziali / Area 5: Politiche Sociali e Sanità</value>
+					<value>Determinazioni Dirigenziali / Area 6: Lavori Pubblici</value>
+					<value>Determinazioni Dirigenziali / Area 7: Ambiente e Parchi</value>
+					<value>Determinazioni Dirigenziali / Area 8: Cultura e Pubblica Istruzione</value>
+					<value>Determinazioni Dirigenziali / Area 9: Sviluppo Economico e Lavoro</value>
+					<value>Determinazioni Dirigenziali / Avvocatura</value>
+					<value>Determinazioni Dirigenziali / Determinazioni Commissario ad Acta</value>
+					<value>Determinazioni Dirigenziali / ex Area 2:Organi Istituzionali Affari Generali Risorse Umane</value>
+					<value>Determinazioni Dirigenziali / ex Area 9: Demanio Patrimonio e Programmazione (8.5.2013)</value>
+					<value>Determinazioni Dirigenziali / ex Area 9: Progetti Speciali e Grandi Concessioni (15.9.14)</value>
+					<value>Determinazioni Dirigenziali / Gabinetto del Sindaco</value>
+					<value>Determinazioni Dirigenziali / Polizia Municipale</value>
+					<value>Determinazioni Dirigenziali / ProvvedimentiCommissarioadActa</value>
+					<value>Determinazioni Dirigenziali / Segretario Generale/Direttore Generale</value>
+					<value>Determinazioni Dirigenziali / Ufficio del Piano di Zona</value>
+					<value>Ordinanze / Area 1: Risorse Finanziare</value>
+					<value>Ordinanze / Area 2: Organi Istituzionali Affari Generali Risorse Umane</value>
+					<value>Ordinanze / Area 3: Attività Demanio e Patrimonio</value>
+					<value>Ordinanze / Area 4: Urbanistica e Pianificazione Territorio</value>
+					<value>Ordinanze / Area 5: Politiche Sociali e Sanità</value>
+					<value>Ordinanze / Area 6: Lavori Pubblici</value>
+					<value>Ordinanze / Area 7: Ambiente e Parchi</value>
+					<value>Ordinanze / Area 8: Cultura e Pubblica Istruzione</value>
+					<value>Ordinanze / Area 9: Sviluppo Economico e Lavoro</value>
+					<value>Ordinanze / Avvocatura</value>
+					<value>Ordinanze / ex Area 9: Demanio Patrimonio e Programmazione</value>
+					<value>Ordinanze / Gabinetto del Sindaco</value>
+					<value>Ordinanze / Polizia Municipale</value>
+					<value>Atti Vari / Atti Matrimoniali</value>
+					<value>Atti Vari / Avviso di Deposito</value>
+					<value>Gare / Avvisi</value>
+					<value>Gare / Bandi</value>
+					<value>ProvvedimentiDeterminativi / Commissario ad Acta</value>
+					<value>Elettorale / Elezioni Amministrative 2014</value>
+					<value>Atti del Commissario Prefettizio / Decreti</value>
+					<value>Atti del Commissario Prefettizio / Deliberazioni</value>
+				</list>
+			</parameter>
+		</constraint>
+
+	</constraints>
+
+	<!-- =============================================================================================================== 
+		Constraints, Types, and Aspects go here... -->
+	<types>
+		<type name="albopretorio:content">
+			<title></title>
+			<description></description>
+			<parent>cm:content</parent>
+			<properties>
+
+				<property name="albopretorio:tipo">
+					<title>Tipo di Documento</title>
+					<type>d:text</type>
+					<constraints>
+						<constraint ref="albopretorio:tipi" />
+					</constraints>
+				</property>
+
+				<property name="albopretorio:oggetto">
+					<title>Oggetto o provvedimento</title>
+					<type>d:text</type>
+				</property>
+
+				<property name="albopretorio:ente">
+					<title>Ente</title>
+					<type>d:text</type>
+				</property>
+
+				<property name="albopretorio:dataatto">
+					<title>Data atto</title>
+					<type>d:text</type>
+				</property>
+
+				<property name="albopretorio:numeroregistro">
+					<title>Numero registro</title>
+					<type>d:text</type>
+				</property>
+
+				<property name="albopretorio:area">
+					<title>Area</title>
+					<type>d:text</type>
+				</property>
+
+			</properties>
+		</type>
+	</types>
+	
+    <aspects>
+        <aspect name="albopretorio:ocrd">
+            <title>OCRd</title>
+            <properties>
+                <property name="albopretorio:processedDate">
+                    <title>OCR process date</title>
+                    <type>d:datetime</type>
+                </property>
+            </properties>
+        </aspect>
+    </aspects>
+
+</model>
