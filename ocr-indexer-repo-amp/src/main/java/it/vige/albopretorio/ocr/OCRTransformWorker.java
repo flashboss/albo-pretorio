@@ -13,59 +13,59 @@
  ******************************************************************************/
 package it.vige.albopretorio.ocr;
 
-import static com.asprise.ocr.Ocr.OUTPUT_FORMAT_PLAINTEXT;
+import static com.asprise.ocr.Ocr.OUTPUT_FORMAT_PDF;
+import static com.asprise.ocr.Ocr.PROP_PDF_OUTPUT_FILE;
 import static com.asprise.ocr.Ocr.RECOGNIZE_TYPE_ALL;
 import static com.asprise.ocr.Ocr.SPEED_SLOW;
 import static com.asprise.ocr.Ocr.setUp;
-import static java.awt.image.BufferedImage.TYPE_INT_RGB;
-import static org.apache.pdfbox.pdmodel.PDDocument.loadNonSeq;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.List;
+import java.io.File;
+import java.util.Properties;
 
 import org.alfresco.repo.content.transform.ContentTransformerHelper;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
+import org.alfresco.service.cmr.repository.MimetypeService;
 import org.alfresco.service.cmr.repository.TransformationOptions;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
+import org.alfresco.util.TempFileProvider;
 
 import com.asprise.ocr.Ocr;
 
 // Transformer from plain PDF (images attached) to Searchable PDF by using OCR
 public class OCRTransformWorker extends ContentTransformerHelper {
 
-	private static final Log logger = LogFactory.getLog(OCRTransformWorker.class);
+	private MimetypeService mimetypeService;
 
 	public final void transform(ContentReader reader, ContentWriter writer, TransformationOptions options)
 			throws Exception {
 
 		try {
 
+			String sourceMimetype = getMimetype(reader);
+			String sourceExtension = mimetypeService.getExtension(sourceMimetype);
+			File sourceFile = TempFileProvider.createTempFile(getClass().getSimpleName() + "_source_",
+					"." + sourceExtension);
+			reader.getContent(sourceFile);
+
+			String path = sourceFile.getAbsolutePath();
+			String targetPath = path.substring(0, path.toLowerCase().indexOf(".pdf")) + "_ocr.pdf";
+			File targetFile = new File(targetPath);
+
 			setUp(); // one time setup
 			Ocr ocr = new Ocr(); // create a new OCR engine
 			ocr.startEngine("por", SPEED_SLOW); // Portoguese
-			String result = "";
-			try {
-				PDDocument document = loadNonSeq(reader.getContentInputStream(), null);
-				@SuppressWarnings("unchecked")
-				List<PDPage> pdPages = (List<PDPage>) document.getDocumentCatalog().getAllPages();
-				for (PDPage pdPage : pdPages) {
-					BufferedImage bim = pdPage.convertToImage(TYPE_INT_RGB, 300);
-					result += ocr.recognize(bim, RECOGNIZE_TYPE_ALL, OUTPUT_FORMAT_PLAINTEXT);
-				}
-				document.close();
-			} catch (IOException e) {
-				logger.error(e);
-			}
-			ocr.stopEngine();
-			writer.putContent(result);
+			Properties props = new Properties();
+			props.setProperty(PROP_PDF_OUTPUT_FILE, targetPath);
+			ocr.recognize(new File[] { sourceFile }, RECOGNIZE_TYPE_ALL, OUTPUT_FORMAT_PDF, props);
+
+			writer.putContent(targetFile);
 
 		} catch (Throwable t) {
 			throw new RuntimeException(t);
 		}
+	}
+
+	public void setMimetypeService(MimetypeService ms) {
+		mimetypeService = ms;
 	}
 }

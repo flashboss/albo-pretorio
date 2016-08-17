@@ -17,10 +17,9 @@ import static it.vige.albopretorio.ocr.model.OCRdModel.ASPECT_OCRD;
 import static it.vige.albopretorio.ocr.model.OCRdModel.PROP_PROCESSED_DATE;
 import static org.alfresco.model.ContentModel.PROP_CONTENT;
 import static org.alfresco.repo.content.MimetypeMap.MIMETYPE_PDF;
-import static org.alfresco.repo.version.VersionBaseModel.PROP_VERSION_TYPE;
 import static org.alfresco.service.cmr.dictionary.DataTypeDefinition.BOOLEAN;
-import static org.alfresco.service.cmr.version.Version.PROP_DESCRIPTION;
 import static org.alfresco.service.cmr.version.VersionType.MINOR;
+import static org.apache.commons.logging.LogFactory.getLog;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -30,6 +29,7 @@ import java.util.Map;
 
 import org.alfresco.repo.action.ParameterDefinitionImpl;
 import org.alfresco.repo.action.executer.ActionExecuterAbstractBase;
+import org.alfresco.repo.version.VersionModel;
 import org.alfresco.service.cmr.action.Action;
 import org.alfresco.service.cmr.action.ParameterDefinition;
 import org.alfresco.service.cmr.repository.ContentData;
@@ -38,14 +38,14 @@ import org.alfresco.service.cmr.repository.ContentService;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
+import org.alfresco.service.cmr.version.Version;
 import org.alfresco.service.cmr.version.VersionService;
 import org.alfresco.service.namespace.QName;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class OCRExtractAction extends ActionExecuterAbstractBase {
 
-	private static final Log logger = LogFactory.getLog(OCRExtractAction.class);
+	private static final Log logger = getLog(OCRExtractAction.class);
 
 	private NodeService nodeService;
 	private ContentService contentService;
@@ -118,8 +118,8 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 			versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
 			if (!versionService.isVersioned(actionedUponNodeRef)) {
 				Map<String, Serializable> versionProperties = new HashMap<String, Serializable>();
-				versionProperties.put(PROP_DESCRIPTION, "OCRd");
-				versionProperties.put(PROP_VERSION_TYPE, MINOR);
+				versionProperties.put(Version.PROP_DESCRIPTION, "OCRd");
+				versionProperties.put(VersionModel.PROP_VERSION_TYPE, MINOR);
 				versionService.createVersion(actionedUponNodeRef, versionProperties);
 			}
 
@@ -129,18 +129,16 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 			writeOriginalContent.putContent(writer.getReader());
 
 			// Set OCRd aspect to avoid future re-OCR process
-
 			Map<QName, Serializable> aspectProperties = new HashMap<QName, Serializable>();
 			aspectProperties.put(PROP_PROCESSED_DATE, new Date());
 			nodeService.addAspect(actionedUponNodeRef, ASPECT_OCRD, aspectProperties);
 
 			// Manual versioning because of Alfresco insane rules for first
-			// version
-			// content nodes
+			// version content nodes
 			versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
 			Map<String, Serializable> versionProperties = new HashMap<String, Serializable>();
-			versionProperties.put(PROP_DESCRIPTION, "OCRd");
-			versionProperties.put(PROP_VERSION_TYPE, MINOR);
+			versionProperties.put(Version.PROP_DESCRIPTION, "OCRd");
+			versionProperties.put(VersionModel.PROP_VERSION_TYPE, MINOR);
 			versionService.createVersion(actionedUponNodeRef, versionProperties);
 
 		}
@@ -154,12 +152,12 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 		this.contentService = contentService;
 	}
 
-	public void setOcrTransformWorker(OCRTransformWorker ocrTransformWorker) {
-		this.ocrTransformWorker = ocrTransformWorker;
-	}
-
 	public void setVersionService(VersionService versionService) {
 		this.versionService = versionService;
+	}
+
+	public void setOcrTransformWorker(OCRTransformWorker ocrTransformWorker) {
+		this.ocrTransformWorker = ocrTransformWorker;
 	}
 
 }
