@@ -13,11 +13,13 @@
  ******************************************************************************/
 package it.vige.albopretorio.ocr;
 
+import static com.asprise.ocr.Ocr.LANGUAGE_POR;
 import static com.asprise.ocr.Ocr.OUTPUT_FORMAT_PDF;
 import static com.asprise.ocr.Ocr.PROP_PDF_OUTPUT_FILE;
 import static com.asprise.ocr.Ocr.RECOGNIZE_TYPE_ALL;
 import static com.asprise.ocr.Ocr.SPEED_SLOW;
 import static com.asprise.ocr.Ocr.setUp;
+import static org.alfresco.util.TempFileProvider.createTempFile;
 
 import java.io.File;
 import java.util.Properties;
@@ -27,7 +29,6 @@ import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.MimetypeService;
 import org.alfresco.service.cmr.repository.TransformationOptions;
-import org.alfresco.util.TempFileProvider;
 
 import com.asprise.ocr.Ocr;
 
@@ -43,8 +44,7 @@ public class OCRTransformWorker extends ContentTransformerHelper {
 
 			String sourceMimetype = getMimetype(reader);
 			String sourceExtension = mimetypeService.getExtension(sourceMimetype);
-			File sourceFile = TempFileProvider.createTempFile(getClass().getSimpleName() + "_source_",
-					"." + sourceExtension);
+			File sourceFile = createTempFile(getClass().getSimpleName() + "_source_", "." + sourceExtension);
 			reader.getContent(sourceFile);
 
 			String path = sourceFile.getAbsolutePath();
@@ -53,12 +53,13 @@ public class OCRTransformWorker extends ContentTransformerHelper {
 
 			setUp(); // one time setup
 			Ocr ocr = new Ocr(); // create a new OCR engine
-			ocr.startEngine("por", SPEED_SLOW); // Portoguese
+			ocr.startEngine(LANGUAGE_POR, SPEED_SLOW); // Portoguese
 			Properties props = new Properties();
 			props.setProperty(PROP_PDF_OUTPUT_FILE, targetPath);
-			ocr.recognize(new File[] { sourceFile }, RECOGNIZE_TYPE_ALL, OUTPUT_FORMAT_PDF, props);
+			String output = ocr.recognize(new File[] { sourceFile }, RECOGNIZE_TYPE_ALL, OUTPUT_FORMAT_PDF, props);
 
-			writer.putContent(targetFile);
+			if (output != null)
+				writer.putContent(targetFile);
 
 		} catch (Throwable t) {
 			throw new RuntimeException(t);

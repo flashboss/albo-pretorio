@@ -20,7 +20,10 @@ import static org.alfresco.repo.content.MimetypeMap.MIMETYPE_PDF;
 import static org.alfresco.service.cmr.dictionary.DataTypeDefinition.BOOLEAN;
 import static org.alfresco.service.cmr.version.VersionType.MINOR;
 import static org.apache.commons.logging.LogFactory.getLog;
+import static org.apache.pdfbox.pdmodel.PDDocument.loadNonSeq;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,12 +39,15 @@ import org.alfresco.service.cmr.repository.ContentData;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentService;
 import org.alfresco.service.cmr.repository.ContentWriter;
+import org.alfresco.service.cmr.repository.FileContentReader;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.version.Version;
 import org.alfresco.service.cmr.version.VersionService;
 import org.alfresco.service.namespace.QName;
 import org.apache.commons.logging.Log;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFTextStripper;
 
 public class OCRExtractAction extends ActionExecuterAbstractBase {
 
@@ -104,43 +110,42 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 		if (originalMimeType.equals(MIMETYPE_PDF)) {
 
 			ContentReader reader = contentService.getReader(actionedUponNodeRef, PROP_CONTENT);
+			if (isBinary(reader)) {
+				ContentWriter writer = contentService.getTempWriter();
+				writer.setMimetype(MIMETYPE_PDF);
 
-			ContentWriter writer = contentService.getTempWriter();
-			writer.setMimetype(MIMETYPE_PDF);
+				try {
+					ocrTransformWorker.transform(reader, writer, null);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 
-			try {
-				ocrTransformWorker.transform(reader, writer, null);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
+				// Set initial version if it's a new one
+				versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
+				if (!versionService.isVersioned(actionedUponNodeRef)) {
+					Map<String, Serializable> versionProperties = new HashMap<String, Serializable>();
+					versionProperties.put(Version.PROP_DESCRIPTION, "OCRd");
+					versionProperties.put(VersionModel.PROP_VERSION_TYPE, MINOR);
+					versionService.createVersion(actionedUponNodeRef, versionProperties);
+				}
 
-			// Set initial version if it's a new one
-			versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
-			if (!versionService.isVersioned(actionedUponNodeRef)) {
+				ContentWriter writeOriginalContent = null;
+				// Update original PDF file
+				writeOriginalContent = contentService.getWriter(actionedUponNodeRef, PROP_CONTENT, true);
+				writeOriginalContent.putContent(writer.getReader());
+
+				versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
 				Map<String, Serializable> versionProperties = new HashMap<String, Serializable>();
 				versionProperties.put(Version.PROP_DESCRIPTION, "OCRd");
 				versionProperties.put(VersionModel.PROP_VERSION_TYPE, MINOR);
 				versionService.createVersion(actionedUponNodeRef, versionProperties);
-			}
 
-			ContentWriter writeOriginalContent = null;
-			// Update original PDF file
-			writeOriginalContent = contentService.getWriter(actionedUponNodeRef, PROP_CONTENT, true);
-			writeOriginalContent.putContent(writer.getReader());
+			}
 
 			// Set OCRd aspect to avoid future re-OCR process
 			Map<QName, Serializable> aspectProperties = new HashMap<QName, Serializable>();
 			aspectProperties.put(PROP_PROCESSED_DATE, new Date());
 			nodeService.addAspect(actionedUponNodeRef, ASPECT_OCRD, aspectProperties);
-
-			// Manual versioning because of Alfresco insane rules for first
-			// version content nodes
-			versionService.ensureVersioningEnabled(actionedUponNodeRef, null);
-			Map<String, Serializable> versionProperties = new HashMap<String, Serializable>();
-			versionProperties.put(Version.PROP_DESCRIPTION, "OCRd");
-			versionProperties.put(VersionModel.PROP_VERSION_TYPE, MINOR);
-			versionService.createVersion(actionedUponNodeRef, versionProperties);
-
 		}
 	}
 
@@ -158,6 +163,21 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 
 	public void setOcrTransformWorker(OCRTransformWorker ocrTransformWorker) {
 		this.ocrTransformWorker = ocrTransformWorker;
+	}
+
+	private boolean isBinary(ContentReader reader) {
+		String filePath = ((FileContentReader) reader).getFile().getAbsolutePath();
+		String content = "";
+		try (FileInputStream in = new FileInputStream(filePath)) {
+
+			PDDocument document = loadNonSeq(in, null);
+			content = new PDFTextStripper().getText(document).trim();
+			document.close();
+		} catch (IOException e) {
+			logger.error(e);
+		}
+
+		return content.isEmpty();
 	}
 
 }

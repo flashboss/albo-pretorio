@@ -14,22 +14,29 @@
 package it.vige.albopretorio.demoamp.test;
 
 import static it.vige.albopretorio.demoamp.DemoComponent.albo_name;
+import static java.lang.Thread.currentThread;
 import static org.alfresco.model.ContentModel.ASSOC_CONTAINS;
 import static org.alfresco.model.ContentModel.PROP_CONTENT;
 import static org.alfresco.model.ContentModel.PROP_NAME;
+import static org.alfresco.model.ContentModel.TYPE_CONTENT;
 import static org.alfresco.repo.content.MimetypeMap.MIMETYPE_PDF;
 import static org.alfresco.repo.security.authentication.AuthenticationUtil.setFullyAuthenticatedUser;
+import static org.alfresco.service.namespace.NamespaceService.CONTENT_MODEL_1_0_URI;
+import static org.alfresco.service.namespace.QName.createQName;
 import static org.apache.log4j.Logger.getLogger;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import org.alfresco.service.cmr.repository.ContentReader;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.alfresco.service.cmr.repository.ContentService;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
+import org.alfresco.service.cmr.search.SearchService;
+import org.alfresco.service.namespace.QName;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -86,59 +93,57 @@ public class DemoComponentTest {
 	@Qualifier("ContentService")
 	protected ContentService contentService;
 
-	@Test
-	public void testWiring() {
-		assertNotNull(demoComponent);
-	}
-
-	@Test
-	public void testGetCompanyHome() {
-		setFullyAuthenticatedUser(ADMIN_USER_NAME);
-		NodeRef companyHome = demoComponent.getCompanyHome();
-		assertNotNull(companyHome);
-		String companyHomeName = (String) nodeService.getProperty(companyHome, PROP_NAME);
-		assertNotNull(companyHomeName);
-		assertTrue(companyHomeName.contains("Home"));
-	}
-
-	@Test
-	public void testChildNodesCount() {
-		setFullyAuthenticatedUser(ADMIN_USER_NAME);
-		NodeRef companyHome = demoComponent.getCompanyHome();
-		int childNodeCount = demoComponent.childNodesCount(companyHome);
-		assertNotNull(childNodeCount);
-		// There are 8 folders by default under Company Home
-		assertEquals(8, childNodeCount);
-	}
-
-	@Test
-	public void testImportAlbo() {
-		setFullyAuthenticatedUser(ADMIN_USER_NAME);
-		NodeRef companyHome = demoComponent.getCompanyHome();
-		NodeRef albo = nodeService.getChildByName(companyHome, ASSOC_CONTAINS, albo_name);
-		int childNodeCount = demoComponent.childNodesCount(albo);
-		assertNotNull(childNodeCount);
-		// There are 6 documents by default under the albo_pretorio folder
-		assertEquals(6, childNodeCount);
-	}
+	@Autowired
+	@Qualifier("SearchService")
+	protected SearchService searchService;
 
 	@Test
 	public void testOCRConversion() {
 		setFullyAuthenticatedUser(ADMIN_USER_NAME);
 		NodeRef companyHome = demoComponent.getCompanyHome();
 		NodeRef albo = nodeService.getChildByName(companyHome, ASSOC_CONTAINS, albo_name);
+		ClassLoader classLoader = currentThread().getContextClassLoader();
+		String fileName = "Pub_matr_061_02_03_2016.pdf";
+		InputStream doc = classLoader.getResourceAsStream("docs/" + fileName);
+		createContentNode(albo, fileName, doc);
 
-		ContentReader reader = contentService.getReader(
-				nodeService.getChildByName(albo, ASSOC_CONTAINS, "InterrogazioneCavaColleLargo.pdf"), PROP_CONTENT);
+		NodeRef pub = nodeService.getChildByName(albo, ASSOC_CONTAINS, "Pub_matr_061_02_03_2016.pdf");
+		boolean contains = searchService.contains(pub, null, "Sebastiano");
+		assertTrue(contains);
 
-		ContentWriter writer = contentService.getTempWriter();
+		fileName = "InterrogazioneCavaColleLargo.pdf";
+		doc = classLoader.getResourceAsStream("docs/" + fileName);
+		createContentNode(albo, fileName, doc);
+
+		NodeRef interrogazione = nodeService.getChildByName(albo, ASSOC_CONTAINS, "InterrogazioneCavaColleLargo.pdf");
+		contains = searchService.contains(pub, null, "Sebastiano");
+		assertTrue(contains);
+
+		nodeService.deleteNode(pub);
+		nodeService.deleteNode(interrogazione);
+	}
+
+	private NodeRef createContentNode(NodeRef parent, String name, InputStream text) {
+
+		// Create a map to contain the values of the properties of the node
+
+		Map<QName, Serializable> props = new HashMap<QName, Serializable>(1);
+		props.put(PROP_NAME, name);
+
+		// use the node service to create a new node
+		NodeRef node = this.nodeService
+				.createNode(parent, ASSOC_CONTAINS, createQName(CONTENT_MODEL_1_0_URI, name), TYPE_CONTENT, props)
+				.getChildRef();
+
+		// Use the content service to set the content onto the newly created
+		// node
+		ContentWriter writer = contentService.getWriter(node, PROP_CONTENT, true);
 		writer.setMimetype(MIMETYPE_PDF);
-		try {
-			ocrTransformWorker.transform(reader, writer, null);
-			assertTrue(writer.getReader().getContentString().contains("Sebastiano"));
-		} catch (Exception e) {
-			fail();
-		}
+		writer.setEncoding("UTF-8");
+		writer.putContent(text);
+
+		// Return a node reference to the newly created node
+		return node;
 	}
 
 }
