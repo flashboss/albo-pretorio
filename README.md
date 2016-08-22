@@ -11,3 +11,7 @@ to start the demo:
 ./run.sh
 
 then, open the browser and connect to http://localhost:8080/alfresco/
+
+to test or install the demo:
+
+mvn clean install -Ddependency.surf.version=6.3

@@ -42,13 +42,6 @@
 		</developer>
 	</developers>
 
-	<repositories>
-		<repository>
-			<id>alfresco-public</id>
-			<url>https://artifacts.alfresco.com/nexus/content/groups/public</url>
-		</repository>
-	</repositories>
-
 	<!-- SDK properties have sensible defaults in the SDK parent, but you can 
 		override the properties below to use another version. For more available 
 		properties see the alfresco-sdk-parent POM. -->
