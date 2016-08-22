@@ -14,6 +14,7 @@
 package it.vige.albopretorio.demoamp.test;
 
 import static it.vige.albopretorio.demoamp.DemoComponent.albo_name;
+import static it.vige.albopretorio.ocr.OCRExtractAction.getText;
 import static java.lang.Thread.currentThread;
 import static org.alfresco.model.ContentModel.ASSOC_CONTAINS;
 import static org.alfresco.model.ContentModel.PROP_CONTENT;
@@ -24,18 +25,25 @@ import static org.alfresco.repo.security.authentication.AuthenticationUtil.setFu
 import static org.alfresco.service.namespace.NamespaceService.CONTENT_MODEL_1_0_URI;
 import static org.alfresco.service.namespace.QName.createQName;
 import static org.apache.log4j.Logger.getLogger;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import org.alfresco.service.cmr.repository.ContentIOException;
+import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentService;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
-import org.alfresco.service.cmr.search.SearchService;
+import org.alfresco.service.cmr.version.Version;
+import org.alfresco.service.cmr.version.VersionService;
 import org.alfresco.service.namespace.QName;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -94,8 +102,8 @@ public class DemoComponentTest {
 	protected ContentService contentService;
 
 	@Autowired
-	@Qualifier("SearchService")
-	protected SearchService searchService;
+	@Qualifier("VersionService")
+	protected VersionService versionService;
 
 	@Test
 	public void testOCRConversion() {
@@ -108,7 +116,17 @@ public class DemoComponentTest {
 		createContentNode(albo, fileName, doc);
 
 		NodeRef pub = nodeService.getChildByName(albo, ASSOC_CONTAINS, "Pub_matr_061_02_03_2016.pdf");
-		boolean contains = searchService.contains(pub, null, "Sebastiano");
+		Version version = versionService.getCurrentVersion(pub);
+		assertEquals("1.1", version.getVersionLabel());
+		Set<QName> aspects = nodeService.getAspects(pub);
+		assertEquals(5, aspects.size());
+		ContentReader reader = contentService.getReader(pub, PROP_CONTENT);
+		boolean contains = false;
+		try {
+			contains = getText(reader.getContentInputStream()).contains("Residente");
+		} catch (ContentIOException | IOException e) {
+			log.error(e);
+		}
 		assertTrue(contains);
 
 		fileName = "InterrogazioneCavaColleLargo.pdf";
@@ -116,7 +134,16 @@ public class DemoComponentTest {
 		createContentNode(albo, fileName, doc);
 
 		NodeRef interrogazione = nodeService.getChildByName(albo, ASSOC_CONTAINS, "InterrogazioneCavaColleLargo.pdf");
-		contains = searchService.contains(pub, null, "Sebastiano");
+		version = versionService.getCurrentVersion(interrogazione);
+		assertNull(version);
+		aspects = nodeService.getAspects(interrogazione);
+		assertEquals(4, aspects.size());
+		reader = contentService.getReader(interrogazione, PROP_CONTENT);
+		try {
+			contains = getText(reader.getContentInputStream()).contains("Sebastiano");
+		} catch (ContentIOException | IOException e) {
+			log.error(e);
+		}
 		assertTrue(contains);
 
 		nodeService.deleteNode(pub);

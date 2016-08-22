@@ -24,6 +24,7 @@ import static org.apache.pdfbox.pdmodel.PDDocument.loadNonSeq;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -169,15 +170,19 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 		String filePath = ((FileContentReader) reader).getFile().getAbsolutePath();
 		String content = "";
 		try (FileInputStream in = new FileInputStream(filePath)) {
-
-			PDDocument document = loadNonSeq(in, null);
-			content = new PDFTextStripper().getText(document).trim();
-			document.close();
+			content = getText(in);
 		} catch (IOException e) {
 			logger.error(e);
 		}
 
 		return content.isEmpty();
+	}
+
+	public static String getText(InputStream in) throws IOException {
+		PDDocument document = loadNonSeq(in, null);
+		String content = new PDFTextStripper().getText(document).trim();
+		document.close();
+		return content;
 	}
 
 }
