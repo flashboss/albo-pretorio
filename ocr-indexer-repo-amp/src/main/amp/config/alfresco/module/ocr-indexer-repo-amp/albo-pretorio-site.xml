@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<view:view xmlns:view="http://www.alfresco.org/view/repository/1.0">
+  <view:metadata>
+    <view:exportBy>admin</view:exportBy>
+    <view:exportDate>2015-09-07T11:43:49.203Z</view:exportDate>
+    <view:exporterVersion>5.1.0 (r111470-b231)</view:exporterVersion>
+    <view:exportOf>/app:company_home/st:sites/cm:albopretorio</view:exportOf>
+  </view:metadata>
+  <st:site xmlns="" xmlns:aos="http://www.alfresco.org/model/aos/1.0" xmlns:inwf="http://www.alfresco.org/model/workflow/invite/nominated/1.0" xmlns:srftcustom="http://www.alfresco.org/model/solrfacetcustomproperty/1.0" xmlns:dl="http://www.alfresco.org/model/datalist/1.0" xmlns:webdav="http://www.alfresco.org/model/webdav/1.0" xmlns:cmisext="http://www.alfresco.org/model/cmis/1.0/cs01ext" xmlns:dp="http://www.alfresco.org/model/distributionpolicies/1.0/model" xmlns:view="http://www.alfresco.org/view/repository/1.0" xmlns:download="http://www.alfresco.org/model/download/1.0" xmlns:twitter="http://www.alfresco.org/model/publishing/twitter/1.0" xmlns:act="http://www.alfresco.org/model/action/1.0" xmlns:reg="http://www.alfresco.org/system/registry/1.0" xmlns:usr="http://www.alfresco.org/model/user/1.0" xmlns:ia="http://www.alfresco.org/model/calendar" xmlns:alf="http://www.alfresco.org" xmlns:app="http://www.alfresco.org/model/application/1.0" xmlns:surf="http://www.alfresco.org/model/surf/1.0" xmlns:ver="http://www.alfresco.org/model/versionstore/1.0" xmlns:module="http://www.alfresco.org/system/modules/1.0" xmlns:lnk="http://www.alfresco.org/model/linksmodel/1.0" xmlns:sync="http://www.alfresco.org/model/sync/1.0" xmlns:rc="http://www.alfresco.org/model/remotecredentials/1.0" xmlns:emailserver="http://www.alfresco.org/model/emailserver/1.0" xmlns:hwf="http://www.alfresco.org/model/hybridworkflow/1.0" xmlns:stcp="http://www.alfresco.org/model/sitecustomproperty/1.0" xmlns:cmis="http://www.alfresco.org/model/cmis/1.0/cs01" xmlns:trx="http://www.alfresco.org/model/transfer/1.0" xmlns:rn="http://www.alfresco.org/model/rendition/1.0" xmlns:exif="http://www.alfresco.org/model/exif/1.0" xmlns:youtube="http://www.alfresco.org/model/publishing/youtube/1.0" xmlns:cmm="http://www.alfresco.org/model/custommodelmanagement/1.0" xmlns:imwf="http://www.alfresco.org/model/workflow/invite/moderated/1.0" xmlns:fm="http://www.alfresco.org/model/forum/1.0" xmlns:rule="http://www.alfresco.org/model/rule/1.0" xmlns:linkedin="http://www.alfresco.org/model/publishing/linkedin/1.0" xmlns:slideshare="http://www.alfresco.org/model/publishing/slideshare/1.0" xmlns:sys="http://www.alfresco.org/model/system/1.0" xmlns:wf="http://www.alfresco.org/model/workflow/1.0" xmlns:qshare="http://www.alfresco.org/model/qshare/1.0" xmlns:srft="http://www.alfresco.org/model/solrfacet/1.0" xmlns:ver2="http://www.alfresco.org/model/versionstore/2.0" xmlns:audio="http://www.alfresco.org/model/audio/1.0" xmlns:blg="http://www.alfresco.org/model/blogintegration/1.0" xmlns:bpm="http://www.alfresco.org/model/bpm/1.0" xmlns:st="http://www.alfresco.org/model/site/1.0" xmlns:imap="http://www.alfresco.org/model/imap/1.0" xmlns:d="http://www.alfresco.org/model/dictionary/1.0" xmlns:custom="custom.model" xmlns:facebook="http://www.alfresco.org/model/publishing/facebook/1.0" xmlns:cm="http://www.alfresco.org/model/content/1.0" xmlns:pubwf="http://www.alfresco.org/model/publishingworkflow/1.0" xmlns:cmiscustom="http://www.alfresco.org/model/cmis/custom" xmlns:flickr="http://www.alfresco.org/model/publishing/flickr/1.0" xmlns:pub="http://www.alfresco.org/model/publishing/1.0" xmlns:alfcmis="http://www.alfresco.org/model/cmis/1.0/alfcmis" view:childName="cm:albopretorio">
+    <view:aspects>
+      <cm:tagscope></cm:tagscope>
+      <cm:titled></cm:titled>
+      <sys:unmovable></sys:unmovable>
+      <cm:ownable></cm:ownable>
+      <cm:auditable></cm:auditable>
+      <sys:referenceable></sys:referenceable>
+      <sys:localized></sys:localized>
+      <sys:undeletable></sys:undeletable>
+    </view:aspects>
+    <view:acl view:inherit="false">
+      <view:ace view:access="ALLOWED">
+        <view:authority>GROUP_EVERYONE</view:authority>
+        <view:permission>ReadPermissions</view:permission>
+      </view:ace>
+      <view:ace view:access="ALLOWED">
+        <view:authority>GROUP_site_albopretorio_SiteContributor</view:authority>
+        <view:permission>SiteContributor</view:permission>
+      </view:ace>
+      <view:ace view:access="ALLOWED">
+        <view:authority>GROUP_site_albopretorio_SiteConsumer</view:authority>
+        <view:permission>SiteConsumer</view:permission>
+      </view:ace>
+      <view:ace view:access="ALLOWED">
+        <view:authority>GROUP_site_albopretorio_SiteManager</view:authority>
+        <view:permission>SiteManager</view:permission>
+      </view:ace>
+      <view:ace view:access="ALLOWED">
+        <view:authority>GROUP_EVERYONE</view:authority>
+        <view:permission>SiteConsumer</view:permission>
+      </view:ace>
+      <view:ace view:access="ALLOWED">
+        <view:authority>GROUP_site_albopretorio_SiteCollaborator</view:authority>
+        <view:permission>SiteCollaborator</view:permission>
+      </view:ace>
+    </view:acl>
+    <view:properties>
+      <cm:created>2011-02-15T20:16:27.080Z</cm:created>
+      <cm:description>
+        <view:mlvalue view:locale="en_US">Portale per i documenti dell'albo pretorio.</view:mlvalue>
+      </cm:description>
+      <cm:creator>mjackson</cm:creator>
+      <!-- sys:node-uuid>b4cff62a-664d-4d45-9302-98723eac1319</sys:node-uuid -->
+      <cm:name>albopretorio</cm:name>
+      <cm:tagScopeSummary>
+        <view:values></view:values>
+      </cm:tagScopeSummary>
+      <sys:store-identifier>SpacesStore</sys:store-identifier>
+      <cm:owner>admin</cm:owner>
+      <st:siteVisibility>PUBLIC</st:siteVisibility>
+      <cm:tagScopeCache>contentUrl=classpath:alfresco/module/ocr-indexer-repo-amp/albo-pretorio-site/content0.txt|mimetype=text/plain|size=0|encoding=UTF-8|locale=en_US_</cm:tagScopeCache>
+      <cm:title>
+        <view:mlvalue view:locale="en_US">Albo Pretorio</view:mlvalue>
+      </cm:title>
+      <st:sitePreset>site-dashboard</st:sitePreset>
+      <sys:store-protocol>workspace</sys:store-protocol>
+      <sys:node-dbid>589</sys:node-dbid>
+      <sys:locale>en_GB_</sys:locale>
+      <cm:modifier>mjackson</cm:modifier>
+      <cm:modified>2011-02-15T20:16:27.080Z</cm:modified>
+    </view:properties>
+    <view:associations>
+      <cm:contains>
+        <cm:folder xmlns="" xmlns:rule="http://www.alfresco.org/model/rule/1.0" view:childName="cm:documentLibrary">
+          <view:aspects>
+            <rule:rules></rule:rules>
+            <cm:tagscope></cm:tagscope>
+            <st:siteContainer></st:siteContainer>
+            <cm:titled></cm:titled>
+            <cm:ownable></cm:ownable>
+            <cm:auditable></cm:auditable>
+            <sys:referenceable></sys:referenceable>
+            <sys:localized></sys:localized>
+          </view:aspects>
+          <view:acl></view:acl>
+          <view:properties>
+            <cm:tagScopeCache>contentUrl=classpath:alfresco/module/ocr-indexer-repo-amp/albo-pretorio-site/content1.txt|mimetype=text/plain|size=0|encoding=UTF-8|locale=en_US_</cm:tagScopeCache>
+            <cm:created>2011-02-15T20:16:28.292Z</cm:created>
+            <cm:description>
+              <view:mlvalue view:locale="en_US">Document Library</view:mlvalue>
+            </cm:description>
+            <cm:creator>mjackson</cm:creator>
+            <!-- sys:node-uuid>8f2105b4-daaf-4874-9e8a-2152569d109b</sys:node-uuid -->
+            <cm:name>documentLibrary</cm:name>
+            <cm:tagScopeSummary>
+              <view:values></view:values>
+            </cm:tagScopeSummary>
+            <sys:store-protocol>workspace</sys:store-protocol>
+            <sys:store-identifier>SpacesStore</sys:store-identifier>
+            <sys:node-dbid>590</sys:node-dbid>
+            <sys:locale>en_GB_</sys:locale>
+            <cm:modifier>mjackson</cm:modifier>
+            <cm:owner>admin</cm:owner>
+            <st:componentId>documentLibrary</st:componentId>
+            <cm:modified>2011-02-15T20:16:28.292Z</cm:modified>
+		  </view:properties>
+		  <view:associations>
+		      <rule:ruleFolder>
+		        <cm:systemfolder view:childName="rule:ruleFolder">
+		          <view:aspects>
+		            <cm:auditable></cm:auditable>
+		            <sys:referenceable></sys:referenceable>
+		            <sys:localized></sys:localized>
+		          </view:aspects>
+		          <view:acl></view:acl>
+		          <view:properties>
+		            <cm:created>2016-08-11T15:44:08.528Z</cm:created>
+		            <cm:creator>admin</cm:creator>
+		            <sys:store-protocol>workspace</sys:store-protocol>
+		            <sys:store-identifier>SpacesStore</sys:store-identifier>
+		            <sys:locale>it_IT_</sys:locale>
+		            <cm:modifier>admin</cm:modifier>
+		            <cm:modified>2016-08-11T15:44:08.528Z</cm:modified>
+		          </view:properties>
+		          <view:associations>
+		            <cm:contains>
+		              <rule:rule view:childName="rule:rules956b5a23-c5a3-4245-ad92-146ce364eeb5">
+		                <view:aspects>
+		                  <cm:titled></cm:titled>
+		                  <cm:auditable></cm:auditable>
+		                  <sys:referenceable></sys:referenceable>
+		                  <sys:localized></sys:localized>
+		                </view:aspects>
+		                <view:acl></view:acl>
+		                <view:properties>
+		                  <cm:created>2016-08-11T15:44:08.551Z</cm:created>
+		                  <cm:title>
+		                    <view:mlvalue view:locale="it">Estrattore OCR</view:mlvalue>
+		                  </cm:title>
+		                  <rule:disabled>false</rule:disabled>
+		                  <cm:description>
+		                    <view:mlvalue view:locale="it">Estrattore OCR per Albo Pretorio</view:mlvalue>
+		                  </cm:description>
+		                  <rule:executeAsynchronously>false</rule:executeAsynchronously>
+		                  <rule:applyToChildren>false</rule:applyToChildren>
+		                  <cm:creator>admin</cm:creator>
+		                  <sys:store-protocol>workspace</sys:store-protocol>
+		                  <sys:store-identifier>SpacesStore</sys:store-identifier>
+		                  <sys:node-dbid>588</sys:node-dbid>
+		                  <sys:locale>it_IT_</sys:locale>
+		                  <cm:modifier>admin</cm:modifier>
+		                  <cm:modified>2016-08-11T15:44:08.551Z</cm:modified>
+		                  <rule:ruleType>
+		                    <view:values>
+		                      <view:value>inbound</view:value>
+		                    </view:values>
+		                  </rule:ruleType>
+		                </view:properties>
+		                <view:associations>
+		                  <rule:action>
+		                    <act:compositeaction view:childName="rule:action">
+		                      <view:aspects>
+		                        <cm:auditable></cm:auditable>
+		                        <sys:referenceable></sys:referenceable>
+		                        <sys:localized></sys:localized>
+		                      </view:aspects>
+		                      <view:acl></view:acl>
+		                      <view:properties>
+		                        <act:executeAsynchronously>false</act:executeAsynchronously>
+		                        <cm:created>2016-08-11T15:44:08.598Z</cm:created>
+		                        <act:actionTitle>
+		                          <view:value view:isNull="true"></view:value>
+		                        </act:actionTitle>
+		                        <act:executionActionStatus>New</act:executionActionStatus>
+		                        <act:executionFailureMessage>
+		                          <view:value view:isNull="true"></view:value>
+		                        </act:executionFailureMessage>
+		                        <cm:creator>admin</cm:creator>
+		                        <sys:store-identifier>SpacesStore</sys:store-identifier>
+		                        <act:executionEndDate>
+		                          <view:value view:isNull="true"></view:value>
+		                        </act:executionEndDate>
+		                        <act:definitionName>composite-action</act:definitionName>
+		                        <sys:store-protocol>workspace</sys:store-protocol>
+		                        <sys:locale>it_IT_</sys:locale>
+		                        <cm:modifier>admin</cm:modifier>
+		                        <act:executionStartDate>
+		                          <view:value view:isNull="true"></view:value>
+		                        </act:executionStartDate>
+		                        <cm:modified>2016-08-11T15:44:08.598Z</cm:modified>
+		                        <act:actionDescription>
+		                          <view:value view:isNull="true"></view:value>
+		                        </act:actionDescription>
+		                      </view:properties>
+		                      <view:associations>
+		                        <act:conditions>
+		                          <act:actioncondition view:childName="act:conditions">
+		                            <view:aspects>
+		                              <cm:auditable></cm:auditable>
+		                              <sys:referenceable></sys:referenceable>
+		                              <sys:localized></sys:localized>
+		                            </view:aspects>
+		                            <view:acl></view:acl>
+		                            <view:properties>
+		                              <cm:created>2016-08-11T15:44:08.639Z</cm:created>
+		                              <act:invert>false</act:invert>
+		                              <cm:creator>admin</cm:creator>
+		                              <sys:store-protocol>workspace</sys:store-protocol>
+		                              <cm:name>438aef31-7dce-4d14-8f0a-d26a6e9756e2</cm:name>
+		                              <sys:store-identifier>SpacesStore</sys:store-identifier>
+		                              <sys:locale>it_IT_</sys:locale>
+		                              <act:definitionName>compare-mime-type</act:definitionName>
+		                              <cm:modifier>admin</cm:modifier>
+		                              <cm:modified>2016-08-11T15:44:08.639Z</cm:modified>
+		                            </view:properties>
+		                            <view:associations>
+		                              <act:parameters>
+		                                <act:actionparameter view:childName="act:parameters">
+		                                  <view:aspects>
+		                                    <cm:auditable></cm:auditable>
+		                                    <sys:referenceable></sys:referenceable>
+		                                    <sys:localized></sys:localized>
+		                                  </view:aspects>
+		                                  <view:acl></view:acl>
+		                                  <view:properties>
+		                                    <cm:created>2016-08-11T15:44:08.701Z</cm:created>
+		                                    <cm:creator>admin</cm:creator>
+		                                    <sys:store-protocol>workspace</sys:store-protocol>
+		                                    <sys:store-identifier>SpacesStore</sys:store-identifier>
+		                                    <sys:locale>it_IT_</sys:locale>
+		                                    <cm:modifier>admin</cm:modifier>
+		                                    <act:parameterValue>
+		                                      <view:value view:datatype="d:any">{http://www.alfresco.org/model/content/1.0}content</view:value>
+		                                    </act:parameterValue>
+		                                    <act:parameterName>property</act:parameterName>
+		                                    <cm:modified>2016-08-11T15:44:08.701Z</cm:modified>
+		                                  </view:properties>
+		                                </act:actionparameter>
+		                                <act:actionparameter view:childName="act:parameters">
+		                                  <view:aspects>
+		                                    <cm:auditable></cm:auditable>
+		                                    <sys:referenceable></sys:referenceable>
+		                                    <sys:localized></sys:localized>
+		                                  </view:aspects>
+		                                  <view:acl></view:acl>
+		                                  <view:properties>
+		                                    <cm:created>2016-08-11T15:44:08.701Z</cm:created>
+		                                    <cm:creator>admin</cm:creator>
+		                                    <sys:store-protocol>workspace</sys:store-protocol>
+		                                    <sys:store-identifier>SpacesStore</sys:store-identifier>
+		                                    <sys:locale>it_IT_</sys:locale>
+		                                    <cm:modifier>admin</cm:modifier>
+		                                    <act:parameterValue>
+		                                      <view:value view:datatype="d:any">application/pdf</view:value>
+		                                    </act:parameterValue>
+		                                    <act:parameterName>value</act:parameterName>
+		                                    <cm:modified>2016-08-11T15:44:08.701Z</cm:modified>
+		                                  </view:properties>
+		                                </act:actionparameter>
+		                              </act:parameters>
+		                            </view:associations>
+		                          </act:actioncondition>
+		                        </act:conditions>
+		                        <act:actions>
+		                          <act:action view:childName="act:actions">
+		                            <view:aspects>
+		                              <cm:auditable></cm:auditable>
+		                              <sys:referenceable></sys:referenceable>
+		                              <sys:localized></sys:localized>
+		                            </view:aspects>
+		                            <view:acl></view:acl>
+		                            <view:properties>
+		                              <act:executeAsynchronously>false</act:executeAsynchronously>
+		                              <cm:created>2016-08-11T15:44:08.663Z</cm:created>
+		                              <act:actionTitle>
+		                                <view:value view:isNull="true"></view:value>
+		                              </act:actionTitle>
+		                              <act:executionActionStatus>New</act:executionActionStatus>
+		                              <act:executionFailureMessage>
+		                                <view:value view:isNull="true"></view:value>
+		                              </act:executionFailureMessage>
+		                              <cm:creator>admin</cm:creator>
+		                              <sys:store-identifier>SpacesStore</sys:store-identifier>
+		                              <act:executionEndDate>
+		                                <view:value view:isNull="true"></view:value>
+		                              </act:executionEndDate>
+		                              <act:definitionName>ocr-extract</act:definitionName>
+		                              <sys:store-protocol>workspace</sys:store-protocol>
+		                              <sys:locale>it_IT_</sys:locale>
+		                              <cm:modifier>admin</cm:modifier>
+		                              <act:executionStartDate>
+		                                <view:value view:isNull="true"></view:value>
+		                              </act:executionStartDate>
+		                              <cm:modified>2016-08-11T15:44:08.663Z</cm:modified>
+		                              <act:actionDescription>
+		                                <view:value view:isNull="true"></view:value>
+		                              </act:actionDescription>
+		                            </view:properties>
+		                            <view:associations>
+		                              <act:parameters>
+		                                <act:actionparameter view:childName="act:parameters">
+		                                  <view:aspects>
+		                                    <cm:auditable></cm:auditable>
+		                                    <sys:referenceable></sys:referenceable>
+		                                    <sys:localized></sys:localized>
+		                                  </view:aspects>
+		                                  <view:acl></view:acl>
+		                                  <view:properties>
+		                                    <cm:created>2016-08-11T15:44:08.701Z</cm:created>
+		                                    <cm:creator>admin</cm:creator>
+		                                    <sys:store-protocol>workspace</sys:store-protocol>
+		                                    <sys:store-identifier>SpacesStore</sys:store-identifier>
+		                                    <sys:locale>it_IT_</sys:locale>
+		                                    <cm:modifier>admin</cm:modifier>
+		                                    <act:parameterValue>
+		                                      <view:value view:datatype="d:boolean">false</view:value>
+		                                    </act:parameterValue>
+		                                    <act:parameterName>continue-on-error</act:parameterName>
+		                                    <cm:modified>2016-08-11T15:44:08.701Z</cm:modified>
+		                                  </view:properties>
+		                                </act:actionparameter>
+		                              </act:parameters>
+		                            </view:associations>
+		                          </act:action>
+		                        </act:actions>
+		                      </view:associations>
+		                    </act:compositeaction>
+		                  </rule:action>
+		                </view:associations>
+		              </rule:rule>
+		            </cm:contains>
+		          </view:associations>
+		        </cm:systemfolder>
+		      </rule:ruleFolder>
+		    </view:associations>
+        </cm:folder>
+        <cm:folder view:childName="cm:surf-config">
+          <view:aspects>
+            <cm:indexControl></cm:indexControl>
+            <cm:auditable></cm:auditable>
+            <sys:referenceable></sys:referenceable>
+            <sys:localized></sys:localized>
+            <sys:hidden></sys:hidden>
+          </view:aspects>
+          <view:acl></view:acl>
+          <view:properties>
+            <cm:isIndexed>false</cm:isIndexed>
+            <cm:created>2011-06-14T14:11:32.858Z</cm:created>
+            <cm:isContentIndexed>true</cm:isContentIndexed>
+            <sys:cascadeHidden>false</sys:cascadeHidden>
+            <sys:clientVisibilityMask>0</sys:clientVisibilityMask>
+            <cm:creator>admin</cm:creator>
+            <!-- sys:node-uuid>0db6f5ce-35b6-40df-9216-c9cf0aaf0961</sys:node-uuid -->
+            <cm:name>surf-config</cm:name>
+            <sys:store-protocol>workspace</sys:store-protocol>
+            <sys:store-identifier>SpacesStore</sys:store-identifier>
+            <sys:node-dbid>701</sys:node-dbid>
+            <sys:locale>en_GB_</sys:locale>
+            <cm:modifier>admin</cm:modifier>
+            <sys:clientControlled>false</sys:clientControlled>
+            <cm:modified>2011-06-14T14:11:32.858Z</cm:modified>
+            <sys:cascadeIndexControl>false</sys:cascadeIndexControl>
+          </view:properties>
+          <view:associations>
+            <cm:contains>
+              <cm:folder view:childName="cm:pages">
+                <view:aspects>
+                  <cm:indexControl></cm:indexControl>
+                  <cm:auditable></cm:auditable>
+                  <sys:referenceable></sys:referenceable>
+                  <sys:localized></sys:localized>
+                </view:aspects>
+                <view:acl></view:acl>
+                <view:properties>
+                  <cm:isIndexed>false</cm:isIndexed>
+                  <cm:created>2011-06-14T14:15:58.746Z</cm:created>
+                  <cm:isContentIndexed>true</cm:isContentIndexed>
+                  <cm:creator>admin</cm:creator>
+                  <!-- sys:node-uuid>fa555056-bd0c-4c59-ac9f-1ab5b0e18e27</sys:node-uuid -->
+                  <cm:name>pages</cm:name>
+                  <sys:store-protocol>workspace</sys:store-protocol>
+                  <sys:store-identifier>SpacesStore</sys:store-identifier>
+                  <sys:node-dbid>702</sys:node-dbid>
+                  <sys:locale>en_GB_</sys:locale>
+                  <cm:modifier>admin</cm:modifier>
+                  <cm:modified>2011-06-14T14:15:58.746Z</cm:modified>
+                </view:properties>
+                <view:associations>
+                  <cm:contains>
+                    <cm:folder view:childName="cm:site">
+                      <view:aspects>
+                        <cm:indexControl></cm:indexControl>
+                        <cm:auditable></cm:auditable>
+                        <sys:referenceable></sys:referenceable>
+                        <sys:localized></sys:localized>
+                      </view:aspects>
+                      <view:acl></view:acl>
+                      <view:properties>
+                        <cm:isIndexed>false</cm:isIndexed>
+                        <cm:created>2011-06-14T14:16:06.229Z</cm:created>
+                        <cm:isContentIndexed>true</cm:isContentIndexed>
+                        <cm:creator>admin</cm:creator>
+                        <!-- sys:node-uuid>2edddd3a-2df8-4887-93ad-b33aa073c539</sys:node-uuid -->
+                        <cm:name>site</cm:name>
+                        <sys:store-protocol>workspace</sys:store-protocol>
+                        <sys:store-identifier>SpacesStore</sys:store-identifier>
+                        <sys:node-dbid>703</sys:node-dbid>
+                        <sys:locale>en_GB_</sys:locale>
+                        <cm:modifier>admin</cm:modifier>
+                        <cm:modified>2011-06-14T14:16:06.229Z</cm:modified>
+                      </view:properties>
+                      <view:associations>
+                        <cm:contains>
+                          <cm:folder view:childName="cm:albopretorio">
+                            <view:aspects>
+                              <cm:indexControl></cm:indexControl>
+                              <cm:auditable></cm:auditable>
+                              <sys:referenceable></sys:referenceable>
+                              <sys:localized></sys:localized>
+                            </view:aspects>
+                            <view:acl></view:acl>
+                            <view:properties>
+                              <cm:isIndexed>false</cm:isIndexed>
+                              <cm:created>2011-06-14T14:16:36.303Z</cm:created>
+                              <cm:isContentIndexed>true</cm:isContentIndexed>
+                              <cm:creator>admin</cm:creator>
+                              <!-- sys:node-uuid>0f746f38-4163-492e-92b2-73ecf7b31fa2</sys:node-uuid -->
+                              <cm:name>albopretorio</cm:name>
+                              <sys:store-protocol>workspace</sys:store-protocol>
+                              <sys:store-identifier>SpacesStore</sys:store-identifier>
+                              <sys:node-dbid>704</sys:node-dbid>
+                              <sys:locale>en_GB_</sys:locale>
+                              <cm:modifier>admin</cm:modifier>
+                              <cm:modified>2011-06-14T14:16:36.303Z</cm:modified>
+                            </view:properties>
+                            <view:associations>
+                              <cm:contains>
+                                <cm:content view:childName="cm:dashboard.xml">
+                                  <view:aspects>
+                                    <cm:indexControl></cm:indexControl>
+                                    <cm:auditable></cm:auditable>
+                                    <sys:referenceable></sys:referenceable>
+                                    <sys:localized></sys:localized>
+                                  </view:aspects>
+                                  <view:acl></view:acl>
+                                  <view:properties>
+                                    <cm:isIndexed>false</cm:isIndexed>
+                                    <cm:created>2011-06-14T14:16:40.866Z</cm:created>
+                                    <cm:isContentIndexed>true</cm:isContentIndexed>
+                                    <cm:creator>admin</cm:creator>
+                                    <!-- sys:node-uuid>8915ce60-7845-40a2-b74e-4837afdb45a0</sys:node-uuid -->
+                                    <cm:name>dashboard.xml</cm:name>
+                                    <sys:store-protocol>workspace</sys:store-protocol>
+                                    <cm:content>contentUrl=classpath:alfresco/module/ocr-indexer-repo-amp/albo-pretorio-site/content75.xml|mimetype=text/xml|size=797|encoding=ISO-8859-1|locale=en_US_</cm:content>
+                                    <sys:store-identifier>SpacesStore</sys:store-identifier>
+                                    <sys:node-dbid>705</sys:node-dbid>
+                                    <sys:locale>en_GB_</sys:locale>
+                                    <cm:modifier>admin</cm:modifier>
+                                    <cm:modified>2011-06-14T14:16:40.933Z</cm:modified>
+                                  </view:properties>
+                                </cm:content>
+                              </cm:contains>
+                            </view:associations>
+                          </cm:folder>
+                        </cm:contains>
+                      </view:associations>
+                    </cm:folder>
+                  </cm:contains>
+                </view:associations>
+              </cm:folder>
+            </cm:contains>
+          </view:associations>
+        </cm:folder>
+      </cm:contains>
+    </view:associations>
+  </st:site>
+</view:view>
