@@ -35,8 +35,6 @@ public class DemoComponent extends AbstractModuleComponent {
     private NodeService nodeService;
 
     private NodeLocatorService nodeLocatorService;
-    
-    public final static String albo_name = "Albo";
 
     public void setNodeService(NodeService nodeService) {
         this.nodeService = nodeService;

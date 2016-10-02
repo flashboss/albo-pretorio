@@ -13,15 +13,16 @@
  ******************************************************************************/
 package it.vige.albopretorio.demoamp.test;
 
-import static it.vige.albopretorio.demoamp.DemoComponent.albo_name;
 import static it.vige.albopretorio.ocr.OCRExtractAction.getText;
 import static java.lang.Thread.currentThread;
 import static org.alfresco.model.ContentModel.ASSOC_CONTAINS;
 import static org.alfresco.model.ContentModel.PROP_CONTENT;
 import static org.alfresco.model.ContentModel.PROP_NAME;
 import static org.alfresco.model.ContentModel.TYPE_CONTENT;
+import static org.alfresco.repo.action.evaluator.CompareMimeTypeEvaluator.NAME;
 import static org.alfresco.repo.content.MimetypeMap.MIMETYPE_PDF;
 import static org.alfresco.repo.security.authentication.AuthenticationUtil.setFullyAuthenticatedUser;
+import static org.alfresco.service.cmr.rule.RuleType.INBOUND;
 import static org.alfresco.service.namespace.NamespaceService.CONTENT_MODEL_1_0_URI;
 import static org.alfresco.service.namespace.QName.createQName;
 import static org.apache.log4j.Logger.getLogger;
@@ -36,12 +37,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.alfresco.repo.action.ActionConditionImpl;
+import org.alfresco.repo.action.ActionImpl;
+import org.alfresco.service.cmr.action.Action;
+import org.alfresco.service.cmr.action.ActionCondition;
 import org.alfresco.service.cmr.repository.ContentIOException;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentService;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
+import org.alfresco.service.cmr.rule.Rule;
+import org.alfresco.service.cmr.rule.RuleService;
 import org.alfresco.service.cmr.version.Version;
 import org.alfresco.service.cmr.version.VersionService;
 import org.alfresco.service.namespace.QName;
@@ -102,14 +109,20 @@ public class DemoComponentTest {
 	protected ContentService contentService;
 
 	@Autowired
+	@Qualifier("RuleService")
+	protected RuleService ruleService;
+
+	@Autowired
 	@Qualifier("VersionService")
 	protected VersionService versionService;
+
+	private Rule rule = new Rule();
 
 	@Test
 	public void testOCRConversion() {
 		setFullyAuthenticatedUser(ADMIN_USER_NAME);
-		NodeRef companyHome = demoComponent.getCompanyHome();
-		NodeRef albo = nodeService.getChildByName(companyHome, ASSOC_CONTAINS, albo_name);
+		NodeRef albo = demoComponent.getCompanyHome();
+		addRule(albo);
 		ClassLoader classLoader = currentThread().getContextClassLoader();
 		String fileName = "Pub_matr_061_02_03_2016.pdf";
 		InputStream doc = classLoader.getResourceAsStream("docs/" + fileName);
@@ -148,6 +161,19 @@ public class DemoComponentTest {
 
 		nodeService.deleteNode(pub);
 		nodeService.deleteNode(interrogazione);
+		ruleService.removeRule(albo, rule);
+	}
+
+	private void addRule(NodeRef albo) {
+		Action action = new ActionImpl(null, "ocr-extract", "ocr-extract");
+		Map<String, Serializable> conditionProperties = new HashMap<String, Serializable>();
+		ActionCondition actionCondition = new ActionConditionImpl(NAME, NAME, conditionProperties);
+		conditionProperties.put("property", PROP_CONTENT);
+		conditionProperties.put("value", MIMETYPE_PDF);
+		action.addActionCondition(actionCondition);
+		rule.setAction(action);
+		rule.setRuleType(INBOUND);
+		ruleService.saveRule(albo, rule);
 	}
 
 	private NodeRef createContentNode(NodeRef parent, String name, InputStream text) {
