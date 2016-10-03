@@ -229,7 +229,7 @@
 		                                    <sys:locale>it_IT_</sys:locale>
 		                                    <cm:modifier>admin</cm:modifier>
 		                                    <act:parameterValue>
-		                                      <view:value view:datatype="d:any">{http://www.alfresco.org/model/content/1.0}content</view:value>
+		                                      <view:value view:datatype="d:qname">{http://www.alfresco.org/model/content/1.0}content</view:value>
 		                                    </act:parameterValue>
 		                                    <act:parameterName>property</act:parameterName>
 		                                    <cm:modified>2016-08-11T15:44:08.701Z</cm:modified>
