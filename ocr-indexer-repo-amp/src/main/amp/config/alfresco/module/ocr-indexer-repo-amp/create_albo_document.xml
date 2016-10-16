@@ -1,0 +1,11 @@
+<view:view xmlns:view="http://www.alfresco.org/view/repository/1.0" 
+           xmlns:cm="http://www.alfresco.org/model/content/1.0"
+           xmlns:app="http://www.alfresco.org/model/application/1.0">
+
+   <cm:content xmlns:blg="http://www.alfresco.org/model/blogintegration/1.0" xmlns:alf="http://www.alfresco.org" xmlns:cmis="http://www.alfresco.org/model/cmis/1.0/cs01" xmlns:bpm="http://www.alfresco.org/model/bpm/1.0" xmlns:inwf="http://www.alfresco.org/model/workflow/invite/nominated/1.0" xmlns:imap="http://www.alfresco.org/model/imap/1.0" xmlns:cm="http://www.alfresco.org/model/content/1.0" xmlns:reg="http://www.alfresco.org/system/registry/1.0" xmlns:ver2="http://www.alfresco.org/model/versionstore/2.0" xmlns:stcp="http://www.alfresco.org/model/sitecustomproperty/1.0" xmlns:view="http://www.alfresco.org/view/repository/1.0" xmlns:imwf="http://www.alfresco.org/model/workflow/invite/moderated/1.0" xmlns:act="http://www.alfresco.org/model/action/1.0" xmlns:wf="http://www.alfresco.org/model/workflow/1.0" xmlns:trx="http://www.alfresco.org/model/transfer/1.0" view:childName="cm:invite-email-add-direct.html.ftl">
+      <app:uifacets/>
+      <cm:name>bubbusettete</cm:name>
+      <app:icon>space-icon-default</app:icon>
+   </cm:content>
+
+</view:view>
