@@ -21,4 +21,5 @@ public interface OCRdModel {
 	static final String URI = "http://vige.it/model/content/1.0";
 	static final QName ASPECT_OCRD = createQName(URI, "ocrd");
 	static final QName PROP_PROCESSED_DATE = createQName(URI, "processedDate");
+	static final QName MODEL_OCRD = createQName(URI, "content");
 }

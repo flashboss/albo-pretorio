@@ -13,7 +13,7 @@
  ******************************************************************************/
 package it.vige.albopretorio.ocr;
 
-import static it.vige.albopretorio.ocr.model.OCRdModel.ASPECT_OCRD;
+import static it.vige.albopretorio.ocr.model.OCRdModel.*;
 import static it.vige.albopretorio.ocr.model.OCRdModel.PROP_PROCESSED_DATE;
 import static org.alfresco.model.ContentModel.PROP_CONTENT;
 import static org.alfresco.repo.content.MimetypeMap.MIMETYPE_PDF;
@@ -142,7 +142,7 @@ public class OCRExtractAction extends ActionExecuterAbstractBase {
 				versionService.createVersion(actionedUponNodeRef, versionProperties);
 
 			}
-
+			nodeService.setType(actionedUponNodeRef, MODEL_OCRD);
 			// Set OCRd aspect to avoid future re-OCR process
 			Map<QName, Serializable> aspectProperties = new HashMap<QName, Serializable>();
 			aspectProperties.put(PROP_PROCESSED_DATE, new Date());
