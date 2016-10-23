@@ -173,9 +173,7 @@
 	<modules>
 		<module>ocr-indexer-repo-amp</module>
 		<module>ocr-indexer-share-amp</module>
-		<module>repo</module>
 		<module>solr-config</module>
-		<module>share</module>
 		<module>runner</module>
 	</modules>
 </project>
