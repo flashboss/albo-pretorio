@@ -27,3 +27,11 @@ model.jsonModel = {
             }
         }]
 };
+
+Alfresco.util.Ajax.request(
+		{
+		   url: "http://localhost:8080/share/proxy/alfresco-noauth/api/simple-page",
+		   method: Alfresco.util.Ajax.GET,
+		   dataObj: dataobj,
+		   requestContentType: Alfresco.util.Ajax.JSON
+		});
